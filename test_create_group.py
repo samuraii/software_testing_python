@@ -63,6 +63,7 @@ class TestAddGroup(unittest.TestCase):
         self.create_group(wd, Group(name='Test', header='Header', footer='Footer'))
         self.return_to_group_page(wd)
         self.logout(wd)
+        self.complete(wd)
 
     def test_add_empty_group(self):
         wd = self.wd
@@ -72,6 +73,7 @@ class TestAddGroup(unittest.TestCase):
         self.create_group(wd, Group('', '', ''))
         self.return_to_group_page(wd)
         self.logout(wd)
+        self.complete(wd)
 
 
 if __name__ == '__main__':
