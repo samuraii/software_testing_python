@@ -16,8 +16,7 @@ class Application:
 
     def accept_alert(self):
         try:
-            alert = self.wd.switch_to_alert()
-            alert.accept()
+            self.wd.switch_to_alert().accept()
         except NoAlertPresentException:
             pass
 
