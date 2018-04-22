@@ -14,6 +14,13 @@ class Application:
         self.group = GroupHelper(self)
         self.contact = ContactHelper(self)
 
+    def is_valid(self):
+        try:
+            url = self.wd.current_url
+            return True
+        except:
+            return False
+
     def accept_alert(self):
         try:
             self.wd.switch_to_alert().accept()
