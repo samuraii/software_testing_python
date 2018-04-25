@@ -20,6 +20,7 @@ class ContactHelper:
 
     def check_number(self, number=0):
         wd = self.app.wd
+        self.app.open_homepage()
         wd.find_elements_by_name('selected[]')[number].click()
 
     def edit_data(self, contact_data, number=0):
@@ -46,7 +47,5 @@ class ContactHelper:
         wd.find_element_by_css_selector('input[value="Delete"]').click()
 
     def count(self):
-        wd = self.app.wd
-        self.open_group_page()
+        wd = self.wd
         return len(wd.find_elements_by_name('selected[]'))
-
