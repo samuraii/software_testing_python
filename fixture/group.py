@@ -1,3 +1,5 @@
+from model.data import Group
+
 class GroupHelper:
 
     def __init__(self, app):
@@ -23,6 +25,7 @@ class GroupHelper:
         wd.find_element_by_name("group_footer").send_keys(group.footer)
         wd.find_element_by_name("submit").click()
         self.return_to_group_page()
+        self.group_cashe = None
 
     def delete_first(self):
         wd = self.app.wd
@@ -30,6 +33,7 @@ class GroupHelper:
         self.check_number(0)
         wd.find_element_by_name("delete").click()
         self.return_to_group_page()
+        self.group_cashe = None
 
     def check_number(self, number=0):
         wd = self.app.wd
@@ -54,6 +58,7 @@ class GroupHelper:
             wd.find_element_by_name("group_footer").send_keys(group_data.footer)
         wd.find_element_by_name("update").click()
         self.return_to_group_page()
+        self.group_cashe = None
 
     def return_to_group_page(self):
         self.app.wd.find_element_by_link_text("group page").click()
@@ -63,3 +68,17 @@ class GroupHelper:
         self.open_group_page()
         return len(wd.find_elements_by_name('selected[]'))
 
+    group_cashe = None
+
+    def get_group_list(self):
+        if self.group_cashe is None:
+            wd = self.app.wd
+            self.open_group_page()
+            self.group_cashe = []
+            for g in wd.find_elements_by_css_selector('.group'):
+                name = g.text
+                id = g.find_element_by_tag_name('input').get_attribute('value')
+                self.group_cashe.append(Group(name=name, id=id))
+        else:
+
+            return list(self.group_cashe)
