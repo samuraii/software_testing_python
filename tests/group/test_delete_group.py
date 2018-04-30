@@ -6,7 +6,7 @@ def test_delete_group(app):
         app.group.create(Group(name='Test', header='Header', footer='Footer'))
     before = app.group.get_group_list()
     app.group.delete_first()
+    assert (len(before) - 1) == app.group.count()
     after = app.group.get_group_list()
-    assert (len(before) - 1) == len(after)
     before[0:1] = []
     assert before == after

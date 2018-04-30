@@ -79,6 +79,4 @@ class GroupHelper:
                 name = g.text
                 id = g.find_element_by_tag_name('input').get_attribute('value')
                 self.group_cashe.append(Group(name=name, id=id))
-        else:
-
-            return list(self.group_cashe)
+        return list(self.group_cashe)
