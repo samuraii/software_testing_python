@@ -77,6 +77,6 @@ class GroupHelper:
             self.group_cashe = []
             for g in wd.find_elements_by_css_selector('.group'):
                 name = g.text
-                id = g.find_element_by_tag_name('input').get_attribute('value')
-                self.group_cashe.append(Group(name=name, id=id))
+                group_id = g.find_element_by_tag_name('input').get_attribute('value')
+                self.group_cashe.append(Group(name=name, id=group_id))
         return list(self.group_cashe)

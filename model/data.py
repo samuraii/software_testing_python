@@ -25,4 +25,4 @@ class Contact:
         return "Contact({}, {}, {}, {})".format(self.id, self.firstname, self.lastname, self.nickname)
 
     def __eq__(self, other):
-        return self.id == other.id and self.firstname == other.firstname and self.lastname == other.lastname
+        return self.id == other.id and self.firstname == other.firstname and self.lastname == other.lastname and self.nickname == other.nickname

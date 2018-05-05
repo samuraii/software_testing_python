@@ -1,9 +1,10 @@
+import random
 from model.data import Group
 
 
 def test_add_group(app):
     before = app.group.get_group_list()
-    app.group.create(Group(name='Test', header='Header', footer='Footer'))
+    app.group.create(Group(name='Test' 'firstname' + str(random.randint(1, 999)) , header='Header', footer='Footer'))
     assert app.group.count() - len(before) == 1
     after = app.group.get_group_list()
     assert before != after, 'Список групп не изменился после добавления группы'
