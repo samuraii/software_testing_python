@@ -12,6 +12,9 @@ class Group:
     def __eq__(self, other):
         return self.id == other.id and self.name == other.name
 
+    def __lt__(self, other):
+        return self.id < other.id
+
 
 class Contact:
 
@@ -26,3 +29,6 @@ class Contact:
 
     def __eq__(self, other):
         return self.id == other.id and self.firstname == other.firstname and self.lastname == other.lastname and self.nickname == other.nickname
+
+    def __lt__(self, other):
+        return self.id < other.id

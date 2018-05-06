@@ -1,4 +1,5 @@
 from model.data import Contact
+import random
 
 
 class ContactHelper:
@@ -27,9 +28,9 @@ class ContactHelper:
         self.app.open_homepage()
         wd.find_elements_by_name('selected[]')[number].click()
 
-    def edit_data(self, contact_data, number=0):
+    def edit_data_by_index(self, index, contact_data):
         wd = self.app.wd
-        self.check_number(number)
+        self.check_number(index)
         wd.find_element_by_css_selector("img[title='Edit']").click()
         if contact_data.firstname:
             wd.find_element_by_name("firstname").click()
@@ -46,9 +47,9 @@ class ContactHelper:
         wd.find_element_by_name("update").click()
         self.contact_cache = None
 
-    def delete(self, number=0):
+    def delete_by_index(self, index):
         wd = self.wd
-        self.check_number(number)
+        self.check_number(index)
         wd.find_element_by_css_selector('input[value="Delete"]').click()
         self.contact_cache = None
 
