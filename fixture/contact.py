@@ -27,11 +27,14 @@ class ContactHelper:
         wd = self.app.wd
         self.app.open_homepage()
         wd.find_elements_by_name('selected[]')[number].click()
+    
+    def click_edit_contact(self, index):
+        wd = self.app.wd
+        wd.find_elements_by_css_selector("img[title='Edit']")[index].click()
 
     def edit_data_by_index(self, index, contact_data):
         wd = self.app.wd
-        self.check_number(index)
-        wd.find_element_by_css_selector("img[title='Edit']").click()
+        self.click_edit_contact(index)
         if contact_data.firstname:
             wd.find_element_by_name("firstname").click()
             wd.find_element_by_name("firstname").clear()
