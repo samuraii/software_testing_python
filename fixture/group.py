@@ -1,5 +1,4 @@
 from model.data import Group
-import random
 
 
 class GroupHelper:

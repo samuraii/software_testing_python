@@ -1,5 +1,4 @@
 from model.data import Contact
-import random
 
 
 class ContactHelper:
@@ -20,6 +19,12 @@ class ContactHelper:
         wd.find_element_by_name("nickname").click()
         wd.find_element_by_name("nickname").clear()
         wd.find_element_by_name("nickname").send_keys(contact.nickname)
+        wd.find_element_by_name("email").click()
+        wd.find_element_by_name("email").clear()
+        wd.find_element_by_name("email").send_keys(contact.email)
+        wd.find_element_by_name("home").click()
+        wd.find_element_by_name("home").clear()
+        wd.find_element_by_name("home").send_keys(contact.home_phone)
         wd.find_element_by_name("submit").click()
         self.contact_cache = None
 
@@ -27,14 +32,15 @@ class ContactHelper:
         wd = self.app.wd
         self.app.open_homepage()
         wd.find_elements_by_name('selected[]')[number].click()
-    
+
     def click_edit_contact(self, index):
         wd = self.app.wd
         wd.find_elements_by_css_selector("img[title='Edit']")[index].click()
 
     def edit_data_by_index(self, index, contact_data):
         wd = self.app.wd
-        self.click_edit_contact(index)
+        self.check_number(index)
+        wd.find_element_by_css_selector("img[title='Edit']").click()
         if contact_data.firstname:
             wd.find_element_by_name("firstname").click()
             wd.find_element_by_name("firstname").clear()
@@ -47,6 +53,14 @@ class ContactHelper:
             wd.find_element_by_name("nickname").click()
             wd.find_element_by_name("nickname").clear()
             wd.find_element_by_name("nickname").send_keys(contact_data.nickname)
+        if contact_data.email:
+            wd.find_element_by_name("email").click()
+            wd.find_element_by_name("email").clear()
+            wd.find_element_by_name("email").send_keys(contact_data.email)
+        if contact_data.home_phone:
+            wd.find_element_by_name("home").click()
+            wd.find_element_by_name("home").clear()
+            wd.find_element_by_name("home").send_keys(contact_data.home_phone)
         wd.find_element_by_name("update").click()
         self.contact_cache = None
 

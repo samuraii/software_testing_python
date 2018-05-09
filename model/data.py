@@ -18,14 +18,17 @@ class Group:
 
 class Contact:
 
-    def __init__(self, firstname=None, lastname=None, nickname=None, id=None):
+    def __init__(self, firstname=None, lastname=None, nickname=None, id=None, email=None, home_phone=None):
         self.firstname = firstname
         self.lastname = lastname
         self.nickname = nickname
         self.id = id
+        self.email = email
+        self.home_phone = home_phone
 
     def __repr__(self):
-        return "Contact({}, {}, {}, {})".format(self.id, self.firstname, self.lastname, self.nickname)
+        return "Contact({}, {}, {}, {}, {}, {})".format(self.id, self.firstname, self.lastname, self.nickname,
+                                                        self.email, self.home_phone)
 
     def __eq__(self, other):
         return self.id == other.id and self.firstname == other.firstname and self.lastname == other.lastname and self.nickname == other.nickname

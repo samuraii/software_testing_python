@@ -1,19 +1,24 @@
 import random
+import pytest
+import string
 from model.data import Group
 
 
-def test_add_group(app):
+def random_string(prefix, max_len):
+    symbols = string.ascii_letters + string.digits + string.punctuation + " " * 10
+    return prefix + ''.join([random.choice(symbols) for i in range(random.randrange(max_len))])
+
+
+testdata = [Group('', '', '')] + [
+    Group(name=random_string('name', 10), header=random_string('header', 10), footer=random_string('footer', 10))
+    for i in range(5)
+]
+
+
+@pytest.mark.parametrize('group', testdata, ids=[repr(x) for x in testdata])
+def test_add_group(app, group):
     before = app.group.get_group_list()
-    app.group.create(Group(name='Test' 'firstname' + str(random.randint(1, 999)) , header='Header', footer='Footer'))
+    app.group.create(group)
     assert app.group.count() - len(before) == 1
     after = app.group.get_group_list()
     assert before != after, 'Список групп не изменился после добавления группы'
-
-
-def test_add_empty_group(app):
-    before = app.group.get_group_list()
-    app.group.create(Group('', '', ''))
-    assert app.group.count() - len(before) == 1
-    after = app.group.get_group_list()
-    assert before != after, 'Список групп не изменился после добавления пустой группы'
-
