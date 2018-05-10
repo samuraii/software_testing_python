@@ -4,15 +4,18 @@ from fixture.application import Application
 fixture = None
 
 
+
 @pytest.fixture
 def app(request):
     global fixture
+    browser = pytest.config.getoption('--browser')
+    url = pytest.config.getoption('--url')
     if fixture is None:
-        fixture = Application()
+        fixture = Application(browser=browser, url=url)
         fixture.session.login('admin', 'secret')
     else:
         if not fixture.is_valid():
-            fixture = Application()
+            fixture = Application(browser=browser, url=url)
     fixture.session.ensure_login('admin', 'secret')
     return fixture
 
@@ -24,3 +27,8 @@ def stop(request):
         fixture.complete()
     request.addfinalizer(finalize)
     return fixture
+
+
+def pytest_addoption(parser):
+    parser.addoption('--browser', default='chrome', action='store')
+    parser.addoption('--url', default='http://localhost/', action='store')

@@ -140,8 +140,8 @@ class ContactHelper:
                 contact_id = c_fields[0].find_element_by_tag_name('input').get_attribute('id')
                 self.contact_cache.append(
                     Contact(
-                        id=contact_id, 
-                        firstname=firstname, 
+                        id=contact_id,
+                        firstname=firstname,
                         lastname=lastname,
                         all_phones_from_home_page=all_phones,
                         all_emails_from_home_page=all_emails,
@@ -149,14 +149,14 @@ class ContactHelper:
                     )
                 )
         return self.contact_cache
-    
+
     def get_contact_info_from_edit_page(self, index):
         wd = self.wd
         self.click_edit_contact(index)
         id = wd.find_element_by_name('id').get_attribute('value')
         first_name = wd.find_element_by_name('firstname').get_attribute('value')
-        last_name = wd.find_element_by_name('lastname').get_attribute('value')  
-        nick_name = wd.find_element_by_name('nickname').get_attribute('value')      
+        last_name = wd.find_element_by_name('lastname').get_attribute('value')
+        nick_name = wd.find_element_by_name('nickname').get_attribute('value')
         home_phone = wd.find_element_by_name('home').get_attribute('value')
         mobile_phone = wd.find_element_by_name('mobile').get_attribute('value')
         work_phone = wd.find_element_by_name('work').get_attribute('value')
@@ -166,20 +166,20 @@ class ContactHelper:
         email2 = wd.find_element_by_name('email2').get_attribute('value')
         email3 = wd.find_element_by_name('email3').get_attribute('value')
         return Contact(
-            id=id, 
-            firstname=first_name, 
+            id=id,
+            firstname=first_name,
             lastname=last_name,
             nickname=nick_name,
             home_phone=home_phone,
             work_phone=work_phone,
-            mobile_phone=mobile_phone, 
+            mobile_phone=mobile_phone,
             secondary_phone=secondary_phone,
-            email = email,
-            email2 = email2,
-            email3 = email3,
+            email=email,
+            email2=email2,
+            email3=email3,
             address=address
         )
-    
+
     def open_contact_view_page(self, index):
         wd = self.wd
         entry = wd.find_elements_by_name('entry')[index]
@@ -219,8 +219,8 @@ class ContactHelper:
             firstname=first_last_name.split()[0],
             lastname=first_last_name.split()[1],
             home_phone=home_phone,
-            work_phone=work_phone,  
-            mobile_phone=mobile_phone, 
+            work_phone=work_phone,
+            mobile_phone=mobile_phone,
             secondary_phone=secondary_phone,
             all_emails_from_view_page=all_mails
         )

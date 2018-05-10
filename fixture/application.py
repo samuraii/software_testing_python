@@ -8,12 +8,21 @@ from fixture.contact import ContactHelper
 
 class Application:
 
-    def __init__(self):
-        self.wd = webdriver.Chrome()
+    def __init__(self, browser, url):
+        if browser == 'chrome':
+            self.wd = webdriver.Chrome()
+        elif browser == 'firefox':
+            self.wd = webdriver.Firefox()
+        elif browser == 'safari':
+            self.wd = webdriver.Safari()
+        elif browser == 'ie':
+            self.wd = webdriver.Ie()
+        else:
+            raise ValueError('I don\'t know this browser - {}'.format(browser))
         self.session = SessionHelper(self)
         self.group = GroupHelper(self)
         self.contact = ContactHelper(self)
-        self.homepage = 'http://localhost/'
+        self.homepage = url
 
     def is_valid(self):
         try:
