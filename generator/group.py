@@ -1,7 +1,7 @@
 import string
 import random
 import os.path
-import json
+import jsonpickle
 import getopt
 import sys
 from model.data import Group
@@ -13,13 +13,13 @@ except getopt.GetoptError as err:
     sys.exit(2)
 
 n = 5
-f = 'data/groups.json'
+f_name = 'data/groups.json'
 
-for o, a in opts:
-    if o == '-n':
-        n = int(a)
-    elif o == '-f':
-        f = a
+for opt, val in opts:
+    if opt == '-n':
+        n = int(val)
+    elif opt == '-f':
+        f = val
 
 
 def random_string(prefix, max_len):
@@ -32,7 +32,8 @@ testdata = [Group('', '', '')] + [
     for i in range(n)
 ]
 
-file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', f)
+file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', f_name)
 
 with open(file, 'w') as f:
-    f.write(json.dumps(testdata, default=lambda x: x.__dict__, indent=2))
+    jsonpickle.set_encoder_options('json', indent=2)
+    f.write(jsonpickle.encode(testdata))
