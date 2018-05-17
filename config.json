@@ -1,5 +1,13 @@
 {
-  "url": "http://localhost/",
-  "username": "admin",
-  "password": "secret"
+  "web": {
+    "url": "http://localhost/",
+    "username": "admin",
+    "password": "secret"
+  },
+  "db": {
+    "host": "localhost",
+    "db": "testapp",
+    "user": "root",
+    "password": "root"
+  }
 }

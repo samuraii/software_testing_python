@@ -10,9 +10,8 @@ def test_delete_contacts(app):
                 lastname='lastname', 
                 nickname='nickname'))
     before = app.contact.get_contact_list()
-    random_contact = random.randint(0, len(before) - 1)
-    app.contact.delete_by_index(random_contact)
+    random_contact = random.choice(before)
+    app.contact.delete_by_id(random_contact.id)
     app.accept_alert()
-    assert (len(before) - 1) == app.contact.count()
-    after = app.contact.get_contact_list()
+    after =app.contact.get_contact_list()
     assert before != after

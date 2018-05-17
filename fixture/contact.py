@@ -112,9 +112,9 @@ class ContactHelper:
         wd.find_element_by_name("update").click()
         self.contact_cache = None
 
-    def delete_by_index(self, index):
+    def delete_by_id(self, id):
         wd = self.wd
-        self.check_number(index)
+        wd.find_element_by_id('{}'.format(id)).click()
         wd.find_element_by_css_selector('input[value="Delete"]').click()
         self.contact_cache = None
 

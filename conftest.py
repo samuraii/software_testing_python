@@ -4,23 +4,55 @@ import os.path
 import importlib
 import jsonpickle
 from fixture.application import Application
+from fixture.db import DbFixture
 
 fixture = None
 config = None
 
+
+def pytest_addoption(parser):
+    parser.addoption('--browser', default='chrome', action='store')
+    parser.addoption('--config', default='config.json', action='store')
+    parser.addoption('--check_ui', action='store_true')
+
+
+def load_config(file):
+    global config
+    if config is None:
+        config_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
+        with open(config_file_path) as config_file:
+            config = json.load(config_file)
+    return config
+
 @pytest.fixture
 def app(request):
     global fixture
-    global config
     browser = pytest.config.getoption('--browser')
-    if config is None:
-        config_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), pytest.config.getoption('--config'))
-        with open(config_file_path) as config_file:
-            config = json.load(config_file)
+    web_config = load_config(pytest.config.getoption('--config'))['web']
     if fixture is None or not fixture.is_valid():
-        fixture = Application(browser=browser, url=config['url'])
-    fixture.session.ensure_login(config['username'], config['password'])
+        fixture = Application(browser=browser, url=web_config['url'])
+    fixture.session.ensure_login(web_config['username'], web_config['password'])
     return fixture
+
+
+@pytest.fixture(scope='session')
+def db(request):
+    db_config = load_config(pytest.config.getoption('--config'))['db']
+    dbfixture = DbFixture(
+        host=db_config['host'],
+        db=db_config['db'],
+        user=db_config['user'],
+        password=db_config['password']
+    )
+    def fin():
+        dbfixture.destroy()
+    request.addfinalizer(fin)
+    return dbfixture
+
+
+@pytest.fixture
+def check_ui(request):
+    return pytest.config.getoption('--check_ui')
 
 
 @pytest.fixture(scope='session', autouse=True)
@@ -30,11 +62,6 @@ def stop(request):
         fixture.complete()
     request.addfinalizer(finalize)
     return fixture
-
-
-def pytest_addoption(parser):
-    parser.addoption('--browser', default='chrome', action='store')
-    parser.addoption('--config', default='config.json', action='store')
 
 
 def pytest_generate_tests(metafunc):
