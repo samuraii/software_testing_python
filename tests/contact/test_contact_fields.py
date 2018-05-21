@@ -1,6 +1,5 @@
 import re
 import random
-from data.contacts import Contact, random_string, random_phone
 
 
 def clear_phone_from_additional_symbols(phone):
@@ -38,27 +37,12 @@ def merge_emails_like_on_home_page(contact):
     )
 
 
-def create_random_contact(app_instance):
-    app_instance.contact.create(
-        Contact(
-            firstname=random_string('firstname', 10),
-            lastname=random_string('lastname', 15),
-            nickname=random_string('nickname', 15),
-            email=random_string('e', 10, 0) + '@mail.ru',
-            home_phone=random_phone(8),
-            mobile_phone=random_phone(8),
-            secondary_phone=random_phone(8),
-            work_phone=random_phone(8)
-        )
-    )
-
-
 # Проверяем что на главной станице отображаемая информация
 # соответствует информации в БД
 def test_contact_phones_on_home_page(app, orm):
     contacts_from_home_page = app.contact.get_contact_list()
     if len(contacts_from_home_page) == 0:
-        create_random_contact(app_instance=app)
+        app.contact.create_random_contact()
     contacts_from_db = orm.get_contact_list()
     assert len(contacts_from_home_page) == len(contacts_from_db)
     for i in range(len(contacts_from_db)):
@@ -69,7 +53,7 @@ def test_contact_phones_on_home_page(app, orm):
 def test_emails_on_home_page(app, orm):
     contacts_from_home_page = app.contact.get_contact_list()
     if len(contacts_from_home_page) == 0:
-        create_random_contact(app_instance=app)
+        app.contact.create_random_contact()
     contacts_from_db = orm.get_contact_list()
     assert len(contacts_from_home_page) == len(contacts_from_db)
     for i in range(len(contacts_from_db)):
@@ -80,7 +64,7 @@ def test_emails_on_home_page(app, orm):
 def test_address_on_home_page(app, orm):
     contacts_from_home_page = app.contact.get_contact_list()
     if len(contacts_from_home_page) == 0:
-        create_random_contact(app_instance=app)
+        app.contact.create_random_contact()
     contacts_from_db = orm.get_contact_list()
     assert len(contacts_from_home_page) == len(contacts_from_db)
     for i in range(len(contacts_from_db)):
@@ -90,7 +74,7 @@ def test_address_on_home_page(app, orm):
 def test_first_and_last_name_on_home_page(app, orm):
     contacts_from_home_page = app.contact.get_contact_list()
     if len(contacts_from_home_page) == 0:
-        create_random_contact(app_instance=app)
+        app.contact.create_random_contact()
     contacts_from_db = orm.get_contact_list()
     assert len(contacts_from_home_page) == len(contacts_from_db)
     for i in range(len(contacts_from_db)):
@@ -101,7 +85,7 @@ def test_first_and_last_name_on_home_page(app, orm):
 def test_contact_phones_on_view_page(app, orm):
     contacts_from_home_page = app.contact.get_contact_list()
     if len(contacts_from_home_page) == 0:
-        create_random_contact(app_instance=app)
+        app.contact.create_random_contact()
     contacts_from_db = orm.get_contact_list()
     assert len(contacts_from_home_page) == len(contacts_from_db)
     for i in range(len(contacts_from_db)):
@@ -113,7 +97,7 @@ def test_contact_phones_on_view_page(app, orm):
 def test_emails_on_edit_page(app):
     contacts_from_home_page = app.contact.get_contact_list()
     if len(contacts_from_home_page) == 0:
-        create_random_contact(app_instance=app)
+        app.contact.create_random_contact()
     contact_amount = len(app.contact.get_contact_list())
     random_index = random.randint(0, contact_amount - 1)
     contact_from_homepage = app.contact.get_contact_list()[random_index]

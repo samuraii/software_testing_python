@@ -1,12 +1,18 @@
-from model.data import Contact
+from model.data import Contact, Group
+from fixture.group import GroupHelper
+from data.contacts import random_string, random_phone
+from selenium.webdriver.support.select import Select
 import re
+import random
 
 
 class ContactHelper:
 
-    def __init__(self, app):
+    def __init__(self, app, orm):
         self.app = app
+        self.orm = orm
         self.wd = self.app.wd
+        self.group = GroupHelper()
 
     def create(self, contact):
         wd = self.wd
@@ -57,6 +63,20 @@ class ContactHelper:
             wd.find_element_by_name("phone2").send_keys(contact.secondary_phone)
         wd.find_element_by_name("submit").click()
         self.contact_cache = None
+
+    def create_random_contact(self):
+        self.create(
+            Contact(
+                firstname=random_string('firstname', 10),
+                lastname=random_string('lastname', 15),
+                nickname=random_string('nickname', 15),
+                email=random_string('e', 10, 0) + '@mail.ru',
+                home_phone=random_phone(8),
+                mobile_phone=random_phone(8),
+                secondary_phone=random_phone(8),
+                work_phone=random_phone(8)
+            )
+        )
 
     def click_edit_contact(self, index):
         wd = self.wd
@@ -117,6 +137,10 @@ class ContactHelper:
         wd.find_element_by_id('{}'.format(id)).click()
         wd.find_element_by_css_selector('input[value="Delete"]').click()
         self.contact_cache = None
+
+    def check_contact(self, number):
+        wd = self.wd
+        wd.find_element_by_css_selector('input[value="{}"]'.format(number)).click()
 
     def count(self):
         wd = self.wd
@@ -224,3 +248,36 @@ class ContactHelper:
             secondary_phone=secondary_phone,
             all_emails_from_view_page=all_mails
         )
+
+    def add_to_group(self):
+        wd = self.app.wd
+        available_groups = self.orm.get_group_list()
+        # Если нет доступных групп, то создаем
+        if len(available_groups) == 0:
+            self.group.create(Group(name='ToTest', header='ToTestHeader', footer='ToTestFooter'))
+            available_groups = self.orm.get_group_list()
+        self.app.open_homepage()
+        # выбираем случайный контакт который не в группе для добавления и жмем добавить
+        available_contacts = self.orm.get_contact_list()
+        if len(available_contacts) == 0:
+            self.create_random_contact()
+            available_contacts = self.orm.get_contact_list()
+        contact_index = random.randint(0, len(available_contacts))
+        added_contact = self.get_contact_info_from_edit_page(contact_index)
+        self.check_contact(contact_index)
+        # сохраняем группу куда добавили
+        group_to_add = Select(wd.find_element_by_name('to_group')).first_selected_option()
+        wd.find_element_by_name('add').click()
+        self.app.open_homepage()
+        return {'added_contact': added_contact, 'group_to_add': group_to_add}
+
+    def remove_contact_from_group(self, group):
+        wd = self.app.wd
+        Select(wd.find_element_by_name('group')).select_by_visible_text(group.name)
+        contacts = self.get_contact_list()
+        random_index = random.randint(0, len(contacts))
+        contact_to_delete = contacts[random_index]
+        self.check_contact(random_index)
+        wd.find_element_by_name('remove').click()
+        self.app.open_homepage()
+        return contact_to_delete
