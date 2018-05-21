@@ -29,7 +29,14 @@ class ORMFixture:
         firstname = Optional(str, column='firstname')
         lastname = Optional(str, column='lastname')
         nickname = Optional(str, column='nickname')
-        deprecated = Optional(datetime, column='deprecated')
+        home_phone = Optional(str, column='home')
+        mobile_phone = Optional(str, column='mobile')
+        work_phone = Optional(str, column='work')
+        secondary_phone = Optional(str, column='phone2')
+        email = Optional(str, column='email')
+        email2 = Optional(str, column='email2')
+        email3 = Optional(str, column='email3')
+        deprecated = Optional(str, column='deprecated')
         groups = Set(
             lambda: ORMFixture.ORMGroup,
             table="address_in_groups",
@@ -47,22 +54,34 @@ class ORMFixture:
         # sql_debug(True) # Debug
 
     def convert_groups_to_model(self, groups):
-        def convert(group):
+        def convert_group(group):
             return Group(id=str(group.id), name=group.name, header=group.header, footer=group.footer)
-        return list(map(convert, groups))
+        return list(map(convert_group, groups))
 
     @db_session
     def get_group_list(self):
         return self.convert_groups_to_model(select(g for g in ORMFixture.ORMGroup))
 
-    def convert_contacts_to_model(self, contacts):
-        def convert(contact):
-            return Contact(id=str(contact.id), firstname=contact.firstname, lastname=contact.lastname, nickname=contact.nickname)
-        return list(map(convert, contacts))
-
     @db_session
     def get_contact_list(self):
-        return self.convert_groups_to_model(select(c for c in ORMFixture.ORMContact if c.deprecated is None))
+        return self.convert_contacts_to_model(select(c for c in ORMFixture.ORMContact if c.deprecated is None))
+
+    def convert_contacts_to_model(self, contacts):
+        def convert_contact(contact):
+            return Contact(
+                id=str(contact.id),
+                firstname=contact.firstname,
+                lastname=contact.lastname,
+                nickname=contact.nickname,
+                home_phone=contact.home_phone,
+                mobile_phone=contact.mobile_phone,
+                work_phone=contact.work_phone,
+                secondary_phone=contact.secondary_phone,
+                email=contact.email,
+                email2=contact.email2,
+                email3=contact.email3
+            )
+        return list(map(convert_contact, contacts))
 
     @db_session
     def get_contacts_in_group(self, group):

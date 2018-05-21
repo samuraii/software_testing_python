@@ -4,3 +4,4 @@ env
 *.log
 __pycache__
 .pytest_cache
+config.json
