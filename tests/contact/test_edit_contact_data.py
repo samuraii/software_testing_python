@@ -2,7 +2,7 @@ import random
 from model.data import Contact
 
 
-def test_edit_group_data(app):
+def test_edit_contact_data(app):
     if app.contact.count() == 0:
         app.contact.create(Contact(firstname='firstname' + str(random.randint(1, 999)), lastname='lastname', nickname='nickname'))
     before = app.contact.get_contact_list()
