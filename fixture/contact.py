@@ -252,12 +252,10 @@ class ContactHelper:
     def add_to_group(self):
         wd = self.app.wd
         available_groups = self.orm.get_group_list()
-        # Если нет доступных групп, то создаем
         if len(available_groups) == 0:
             self.group.create(Group(name='ToTest', header='ToTestHeader', footer='ToTestFooter'))
             available_groups = self.orm.get_group_list()
         self.app.open_homepage()
-        # выбираем случайный контакт который не в группе для добавления и жмем добавить
         available_contacts = self.orm.get_contact_list()
         if len(available_contacts) == 0:
             self.create_random_contact()
@@ -265,7 +263,6 @@ class ContactHelper:
         contact_index = random.randint(0, len(available_contacts))
         added_contact = self.get_contact_info_from_edit_page(contact_index)
         self.check_contact(contact_index)
-        # сохраняем группу куда добавили
         group_to_add = Select(wd.find_element_by_name('to_group')).first_selected_option()
         wd.find_element_by_name('add').click()
         self.app.open_homepage()
