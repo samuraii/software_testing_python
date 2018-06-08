@@ -249,32 +249,21 @@ class ContactHelper:
             all_emails_from_view_page=all_mails
         )
 
-    def add_to_group(self):
+    def add_to_group(self, contact_number, group):
         wd = self.app.wd
-        available_groups = self.orm.get_group_list()
-        if len(available_groups) == 0:
-            self.group.create(Group(name='ToTest', header='ToTestHeader', footer='ToTestFooter'))
-            available_groups = self.orm.get_group_list()
         self.app.open_homepage()
-        available_contacts = self.orm.get_contact_list()
-        if len(available_contacts) == 0:
-            self.create_random_contact()
-            available_contacts = self.orm.get_contact_list()
-        contact_index = random.randint(0, len(available_contacts))
-        added_contact = self.get_contact_info_from_edit_page(contact_index)
-        self.check_contact(contact_index)
-        group_to_add = Select(wd.find_element_by_name('to_group')).first_selected_option()
+        self.check_contact(contact_number)
+        Select(wd.find_element_by_name('to_group')).select_by_visible_text(group.name)
         wd.find_element_by_name('add').click()
         self.app.open_homepage()
-        return {'added_contact': added_contact, 'group_to_add': group_to_add}
 
     def remove_contact_from_group(self, group):
         wd = self.app.wd
         Select(wd.find_element_by_name('group')).select_by_visible_text(group.name)
         contacts = self.get_contact_list()
         random_index = random.randint(0, len(contacts))
-        contact_to_delete = contacts[random_index]
+        deleted_contact = contacts[random_index]
         self.check_contact(random_index)
         wd.find_element_by_name('remove').click()
         self.app.open_homepage()
-        return contact_to_delete
+        return deleted_contact
