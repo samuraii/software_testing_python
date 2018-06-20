@@ -40,6 +40,8 @@ class Application:
     def open_homepage(self):
         if not (self.wd.current_url == self.homepage):
             self.wd.get(self.homepage)
+            # Проверяем что есть элемент, характерный только для главной
+            assert self.wd.find_element_by_name('searchstring').is_displayed()
 
     def complete(self):
         self.wd.quit()
