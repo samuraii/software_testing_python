@@ -39,101 +39,73 @@ def merge_emails_like_on_home_page(contact):
 
 # Проверяем что на главной станице отображаемая информация
 # соответствует информации в БД
-def test_contact_phones_on_home_page(app, orm):
+def test_credentials_on_home_page(app, orm):
     contacts_from_home_page = app.contact.get_contact_list()
     if len(contacts_from_home_page) == 0:
         app.contact.create_random_contact()
+        contacts_from_home_page = app.contact.get_contact_list()
     contacts_from_db = orm.get_contact_list()
     assert len(contacts_from_home_page) == len(contacts_from_db)
+    
     for i in range(len(contacts_from_db)):
         assert contacts_from_home_page[i].all_phones_from_home_page == merge_phones_like_on_home_page(
             contacts_from_db[i])
-
-
-def test_emails_on_home_page(app, orm):
-    contacts_from_home_page = app.contact.get_contact_list()
-    if len(contacts_from_home_page) == 0:
-        app.contact.create_random_contact()
-    contacts_from_db = orm.get_contact_list()
-    assert len(contacts_from_home_page) == len(contacts_from_db)
+    
     for i in range(len(contacts_from_db)):
-        assert contacts_from_home_page[i].all_phones_from_home_page == merge_phones_like_on_home_page(
-            contacts_from_db[i])
+        assert contacts_from_home_page[i].all_phones_from_home_page == merge_emails_like_on_home_page(
+        contacts_from_db[i])
 
-
-def test_address_on_home_page(app, orm):
-    contacts_from_home_page = app.contact.get_contact_list()
-    if len(contacts_from_home_page) == 0:
-        app.contact.create_random_contact()
-    contacts_from_db = orm.get_contact_list()
-    assert len(contacts_from_home_page) == len(contacts_from_db)
     for i in range(len(contacts_from_db)):
         assert contacts_from_home_page[i].address == contacts_from_db[i].address
 
-
-def test_first_and_last_name_on_home_page(app, orm):
-    contacts_from_home_page = app.contact.get_contact_list()
-    if len(contacts_from_home_page) == 0:
-        app.contact.create_random_contact()
-    contacts_from_db = orm.get_contact_list()
-    assert len(contacts_from_home_page) == len(contacts_from_db)
     for i in range(len(contacts_from_db)):
         assert contacts_from_db[i].firstname == contacts_from_home_page[i].firstname
         assert contacts_from_db[i].lastname == contacts_from_home_page[i].lastname
 
 
-def test_contact_phones_on_view_page(app, orm):
+def test_credentials_on_view_page(app, orm):
     contacts_from_home_page = app.contact.get_contact_list()
     if len(contacts_from_home_page) == 0:
         app.contact.create_random_contact()
+        contacts_from_home_page = app.contact.get_contact_list()
     contacts_from_db = orm.get_contact_list()
-    assert len(contacts_from_home_page) == len(contacts_from_db)
+    contact_amount = len(contacts_from_homepage)
+    assert contact_amount == len(contacts_from_db)
     for i in range(len(contacts_from_db)):
         contact_from_view_page = app.contact.get_contact_info_from_view_page(i)
         assert merge_phones_like_on_home_page(contact_from_view_page) == merge_phones_like_on_home_page(
             contacts_from_db[i])
+    # random email 
+    random_index = random.randint(0, contact_amount - 1)
+    contact_from_homepage = contacts_from_home_page[random_index]
+    contact_from_view_page = app.contact.get_contact_info_from_view_page(random_index)
+    assert contact_from_homepage.all_emails_from_home_page == contact_from_view_page.all_emails_from_view_page
+    # random frist and last name
+    random_index = random.randint(0, contact_amount - 1)
+    contact_from_homepage = contacts_from_home_page[random_index]
+    contact_from_view_page = app.contact.get_contact_info_from_view_page(random_index)
+    assert contact_from_homepage.firstname == contact_from_view_page.firstname
+    assert contact_from_homepage.lastname == contact_from_view_page.lastname
 
 
-def test_emails_on_edit_page(app):
+def test_credentials_on_edit_page(app):
     contacts_from_home_page = app.contact.get_contact_list()
     if len(contacts_from_home_page) == 0:
         app.contact.create_random_contact()
+        contacts_from_home_page = app.contact.get_contact_list()
     contact_amount = len(app.contact.get_contact_list())
     random_index = random.randint(0, contact_amount - 1)
     contact_from_homepage = app.contact.get_contact_list()[random_index]
     contact_from_edit_page = app.contact.get_contact_info_from_edit_page(random_index)
     assert contact_from_homepage.all_emails_from_home_page == merge_emails_like_on_home_page(contact_from_edit_page)
-
-
-def test_emails_on_view_page(app):
-    contact_amount = len(app.contact.get_contact_list())
+    # random address
     random_index = random.randint(0, contact_amount - 1)
-    contact_from_homepage = app.contact.get_contact_list()[random_index]
-    contact_from_view_page = app.contact.get_contact_info_from_view_page(random_index)
-    assert contact_from_homepage.all_emails_from_home_page == contact_from_view_page.all_emails_from_view_page
-
-
-def test_address_on_edit_page(app):
-    contact_amount = len(app.contact.get_contact_list())
-    random_index = random.randint(0, contact_amount - 1)
-    contact_from_homepage = app.contact.get_contact_list()[random_index]
+    contact_from_homepage = contacts_from_home_page[random_index]
     contact_from_edit_page = app.contact.get_contact_info_from_edit_page(random_index)
     assert contact_from_homepage.address == contact_from_edit_page.address
-
-
-def test_first_and_last_name_on_edit_page(app):
-    contact_amount = len(app.contact.get_contact_list())
+    # random first and last name
     random_index = random.randint(0, contact_amount - 1)
-    contact_from_homepage = app.contact.get_contact_list()[random_index]
+    contact_from_homepage = contacts_from_home_page[random_index]
     contact_from_edit_page = app.contact.get_contact_info_from_edit_page(random_index)
     assert contact_from_homepage.firstname == contact_from_edit_page.firstname
     assert contact_from_homepage.lastname == contact_from_edit_page.lastname
-
-
-def test_first_and_last_name_on_view_page(app):
-    contact_amount = len(app.contact.get_contact_list())
-    random_index = random.randint(0, contact_amount - 1)
-    contact_from_homepage = app.contact.get_contact_list()[random_index]
-    contact_from_view_page = app.contact.get_contact_info_from_view_page(random_index)
-    assert contact_from_homepage.firstname == contact_from_view_page.firstname
-    assert contact_from_homepage.lastname == contact_from_view_page.lastname
